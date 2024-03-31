@@ -21,6 +21,7 @@ const (
 	IncorrectFieldFormat       = 20
 	UnknownCardIssuer          = 30
 	ExpiredCard                = 40
+	FailedLuhnCheck            = 50
 )
 
 func IsDigit(s *string) *pb.ValidationError {
@@ -91,7 +92,7 @@ func LuhnCheck(cardNumber *string) *pb.ValidationError {
 	}
 
 	if sumResult%10 != 0 {
-		return &pb.ValidationError{Code: 2, Message: "Card number failed Luhn check"}
+		return &pb.ValidationError{Code: FailedLuhnCheck, Message: "Card number failed Luhn check"}
 	}
 
 	return nil

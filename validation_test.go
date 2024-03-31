@@ -60,7 +60,7 @@ func TestLuhnCheck(t *testing.T) {
 		expected *pb.ValidationError
 	}{
 		{"4111111111111111", nil},
-		{"4111111111111110", &pb.ValidationError{Code: 2, Message: "Card number failed Luhn check"}},
+		{"4111111111111110", &pb.ValidationError{Code: FailedLuhnCheck, Message: "Card number failed Luhn check"}},
 	}
 
 	for _, tc := range testCases {
