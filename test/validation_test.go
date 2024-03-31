@@ -1,7 +1,8 @@
-package main
+package test
 
 import (
 	"card_validator/pb"
+	"card_validator/validation"
 	"testing"
 )
 
@@ -11,12 +12,12 @@ func TestIsDigit(t *testing.T) {
 		expected *pb.ValidationError
 	}{
 		{"1234567890", nil},
-		{"12abc34567890", &pb.ValidationError{Code: IncorrectFieldFormat, Message: "Card number must contain only digits"}},
-		{"", &pb.ValidationError{Code: EmptyField, Message: "Empty credit card number"}},
+		{"12abc34567890", &pb.ValidationError{Code: validation.IncorrectFieldFormat, Message: "Card number must contain only digits"}},
+		{"", &pb.ValidationError{Code: validation.EmptyField, Message: "Empty credit card number"}},
 	}
 
 	for _, tc := range testCases {
-		result := IsDigit(&tc.input)
+		result := validation.IsDigit(&tc.input)
 		if result == nil && tc.expected != nil {
 			t.Errorf("Expected error, got nil for input: %s", tc.input)
 		}
@@ -36,12 +37,12 @@ func TestIssuerCheck(t *testing.T) {
 	}{
 		{"4111111111111111", nil},
 		{"5211111111111111", nil},
-		{"5611111111111111", &pb.ValidationError{Code: UnknownCardIssuer, Message: "Unknown credit card issuer"}},
-		{"", &pb.ValidationError{Code: IncorrectFieldFormat, Message: "Incorrect card number length"}},
+		{"5611111111111111", &pb.ValidationError{Code: validation.UnknownCardIssuer, Message: "Unknown credit card issuer"}},
+		{"", &pb.ValidationError{Code: validation.IncorrectFieldFormat, Message: "Incorrect card number length"}},
 	}
 
 	for _, tc := range testCases {
-		result := IssuerCheck(&tc.input)
+		result := validation.IssuerCheck(&tc.input)
 		if result == nil && tc.expected != nil {
 			t.Errorf("Expected error, got nil for input: %s", tc.input)
 		}
@@ -60,11 +61,11 @@ func TestLuhnCheck(t *testing.T) {
 		expected *pb.ValidationError
 	}{
 		{"4111111111111111", nil},
-		{"4111111111111110", &pb.ValidationError{Code: FailedLuhnCheck, Message: "Card number failed Luhn check"}},
+		{"4111111111111110", &pb.ValidationError{Code: validation.FailedLuhnCheck, Message: "Card number failed Luhn check"}},
 	}
 
 	for _, tc := range testCases {
-		result := LuhnCheck(&tc.input)
+		result := validation.LuhnCheck(&tc.input)
 		if result == nil && tc.expected != nil {
 			t.Errorf("Expected error, got nil for input: %s", tc.input)
 		}
@@ -84,13 +85,13 @@ func TestExpiration(t *testing.T) {
 		expected *pb.ValidationError
 	}{
 		{"12", "2100", nil},
-		{"01", "2020", &pb.ValidationError{Code: ExpiredCard, Message: "Card is expired"}},
-		{"13", "2025", &pb.ValidationError{Code: IncorrectFieldFormat, Message: "Incorrect month input"}},
-		{"01", "0", &pb.ValidationError{Code: IncorrectFieldFormat, Message: "Incorrect year input"}},
+		{"01", "2020", &pb.ValidationError{Code: validation.ExpiredCard, Message: "Card is expired"}},
+		{"13", "2025", &pb.ValidationError{Code: validation.IncorrectFieldFormat, Message: "Incorrect month input"}},
+		{"01", "0", &pb.ValidationError{Code: validation.IncorrectFieldFormat, Message: "Incorrect year input"}},
 	}
 
 	for _, tc := range testCases {
-		result := Expiration(&tc.month, &tc.year)
+		result := validation.Expiration(&tc.month, &tc.year)
 		if result == nil && tc.expected != nil {
 			t.Errorf("Expected error, got nil for input: %s/%s", tc.month, tc.year)
 		}

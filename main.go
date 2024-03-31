@@ -2,6 +2,7 @@ package main
 
 import (
 	"card_validator/pb"
+	"card_validator/validation"
 	"context"
 	"google.golang.org/grpc"
 	"log"
@@ -15,20 +16,20 @@ type server struct {
 func (s *server) ValidateCard(ctx context.Context, in *pb.CardRequest) (*pb.ValidationResponse, error) {
 	response := &pb.ValidationResponse{Valid: true}
 
-	trimmedCardNumber := RemoveWhitespace(&in.CardNumber)
+	trimmedCardNumber := validation.RemoveWhitespace(&in.CardNumber)
 
-	if digit := IsDigit(&trimmedCardNumber); digit != nil {
+	if digit := validation.IsDigit(&trimmedCardNumber); digit != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, digit)
-	} else if luhn := LuhnCheck(&trimmedCardNumber); luhn != nil {
+	} else if luhn := validation.LuhnCheck(&trimmedCardNumber); luhn != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, luhn)
-	} else if issuer := IssuerCheck(&trimmedCardNumber); issuer != nil {
+	} else if issuer := validation.IssuerCheck(&trimmedCardNumber); issuer != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, issuer)
 	}
 
-	if expiration := Expiration(&in.ExpirationMonth, &in.ExpirationYear); expiration != nil {
+	if expiration := validation.Expiration(&in.ExpirationMonth, &in.ExpirationYear); expiration != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, expiration)
 	}

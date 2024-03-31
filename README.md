@@ -31,3 +31,10 @@ _________________
 **Invalid example:**
 
 <img width="800" src="https://github.com/dmytromk/credit-card-validator-golang/assets/96624185/3a0bcfd1-de40-43d2-b720-fb6e797808bd">
+
+## Tests
+
+To run tests execute following command:
+```shell
+go test ./test
+```

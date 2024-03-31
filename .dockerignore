@@ -1,6 +1,6 @@
 .idea/
-data/
 .git/
 .gitignore
 .editorconfig
-validation_test.go
+test/
+README.md
