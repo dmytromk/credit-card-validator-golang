@@ -28,9 +28,7 @@ func (s *server) ValidateCard(ctx context.Context, in *pb.CardRequest) (*pb.Vali
 		response.Errors = append(response.Errors, issuer)
 	}
 
-	expiration := Expiration(&in.ExpirationMonth, &in.ExpirationYear)
-
-	if expiration != nil {
+	if expiration := Expiration(&in.ExpirationMonth, &in.ExpirationYear); expiration != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, expiration)
 	}

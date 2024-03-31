@@ -17,9 +17,9 @@ func RemoveWhitespace(s *string) string {
 	return sb.String()
 }
 
-func CheckLength(cardNumber *string, possibleLengths *[]int) bool {
+func CheckLength(input *string, possibleLengths *[]int) bool {
 	for _, length := range *possibleLengths {
-		if len(*cardNumber) == length {
+		if len(*input) == length {
 			return true
 		}
 	}
