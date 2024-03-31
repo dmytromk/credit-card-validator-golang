@@ -117,7 +117,6 @@ func Expiration(expirationMonth *string, expirationYear *string) *pb.ValidationE
 		return &pb.ValidationError{Code: ExpiredCard, Message: "Card is expired"}
 	}
 
-	// Check the expired  year and month
 	if year == time.Now().UTC().Year() && month < int(time.Now().UTC().Month()) {
 		return &pb.ValidationError{Code: ExpiredCard, Message: "Card is expired"}
 	}
