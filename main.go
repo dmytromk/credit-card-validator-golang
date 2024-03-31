@@ -1,6 +1,7 @@
 package main
 
 import (
+	"card_validator/internal"
 	"card_validator/pb"
 	"card_validator/validation"
 	"context"
@@ -16,19 +17,15 @@ type server struct {
 func (s *server) ValidateCard(ctx context.Context, in *pb.CardRequest) (*pb.ValidationResponse, error) {
 	response := &pb.ValidationResponse{Valid: true}
 
-	trimmedCardNumber := validation.RemoveWhitespace(&in.CardNumber)
+	trimmedCardNumber := internal.RemoveWhitespace(&in.CardNumber)
 
-	digit := validation.IsDigit(&trimmedCardNumber)
-	luhn := validation.LuhnCheck(&trimmedCardNumber)
-	issuer := validation.IssuerCheck(&trimmedCardNumber)
-
-	if digit != nil {
+	if digit := validation.IsDigit(&trimmedCardNumber); digit != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, digit)
-	} else if luhn != nil {
+	} else if luhn := validation.LuhnCheck(&trimmedCardNumber); luhn != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, luhn)
-	} else if issuer != nil {
+	} else if issuer := validation.IssuerCheck(&trimmedCardNumber); issuer != nil {
 		response.Valid = false
 		response.Errors = append(response.Errors, issuer)
 	}
