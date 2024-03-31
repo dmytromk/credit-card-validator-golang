@@ -1,0 +1,6 @@
+.idea/
+data/
+.git/
+.gitignore
+.editorconfig
+validation_test.go
